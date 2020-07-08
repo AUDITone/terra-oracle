@@ -38,6 +38,7 @@ type configType struct {
 
 		MNT struct {
 			Currencylayer	string	`json:"currencylayer"`
+			Dunamu		string	`json:"dunamu"`
 		}
 
 		SDR struct {

@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"regexp"
 	"time"
-	"strconv"
 
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -28,7 +27,7 @@ func (ps *PriceService) mntToKrw(logger log.Logger) {
 			}()
 
 //			resp, err := http.Get("http://www.apilayer.net/api/live?access_key=f4f5c16e99a0f32baeab5be8ced1cd39")
-			resp, err := http.Get(cfg.Config.APIs.MNT.Currencylayer)
+			resp, err := http.Get(cfg.Config.APIs.MNT.Dunamu)
 			if err != nil {
 				logger.Error("Fail to fetch from freeforexapi", err.Error())
 				return
@@ -42,12 +41,10 @@ func (ps *PriceService) mntToKrw(logger log.Logger) {
 				return
 			}
 
-			usdToKrw := getUsdPrice(string(body), "KRW")
-                        usdToMnt := getUsdPrice(string(body), "MNT")
-			mntToKrw := usdToKrw / usdToMnt
-
-			price  := strconv.FormatFloat(mntToKrw, 'f', -1, 64)
-
+			re, _ := regexp.Compile("\"basePrice\":[0-9.]+")
+			str := re.FindString(string(body))
+			re, _ = regexp.Compile("[0-9.]+")
+			price := re.FindString(str)
 
 			logger.Info(fmt.Sprintf("Recent mnt/krw: %s", price))
 
@@ -59,25 +56,5 @@ func (ps *PriceService) mntToKrw(logger log.Logger) {
 			ps.SetPrice("mnt/krw", sdk.NewDecCoinFromDec("krw", decAmount))
 		}()
 	}
-}
-
-func getUsdPrice(apiBody string, currency string) float64 {
-
-	re, _ := regexp.Compile("\"USD" +currency +"\":[0-9.]+")
-        str := re.FindString(string(apiBody))
-
-        re, _ = regexp.Compile("[0-9.]+")
-
-        return stringToFloat64(re.FindString(str))
-
-}
-
-func stringToFloat64(str string) float64 {
-
-        var floatResult float64
-
-        floatResult, _ = strconv.ParseFloat(str, 64)
-
-        return floatResult
 }
 
