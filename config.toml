@@ -15,6 +15,9 @@ password = ""
 	[APIs.usd]
 	dunamu = "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD"
 
+	[APIs.eur]
+        dunamu = "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWEUR"
+
 	[APIs.mnt]
 	# API key is required
 	# https://currencylayer.com/product
