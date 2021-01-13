@@ -63,7 +63,7 @@ func (ps *PriceService) eurToKrw(logger log.Logger) {
 				return
 			}
 
-			ps.SetPrice("eur/krw", sdk.NewDecCoinFromDec("krw", decAmount), timestamp)
+			ps.SetPrice("eur/krw", sdk.NewDecCoinFromDec("krw", decAmount))
 		}()
 	}
 }
